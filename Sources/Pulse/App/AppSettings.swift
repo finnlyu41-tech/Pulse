@@ -134,9 +134,11 @@ final class AppSettings {
     /// added to the two that allow it. Declaration order, before the user's
     /// own order is applied.
     var allAccounts: [AccountKey] {
-        Provider.allCases.flatMap { provider in
-            [AccountKey(provider)] + extraAccounts.filter { $0.provider == provider }.map(\.key)
-        }
+        Provider.allCases
+            .filter(\.isVisibleInProduct)
+            .flatMap { provider in
+                [AccountKey(provider)] + extraAccounts.filter { $0.provider == provider }.map(\.key)
+            }
     }
 
     /// Every account, in the user's order.
