@@ -91,6 +91,7 @@ struct FloatingUsagePanelView: View {
                             edge: placement.edge,
                             showsRemaining: settings.showsRemaining,
                             showsForecast: settings.showsForecast,
+                            capacityRecommendation: capacityRecommendation,
                             pointerCenter: pointerCentre(for: index)
                         )
                         .fixedSize()
@@ -314,6 +315,13 @@ struct FloatingUsagePanelView: View {
     /// The same across the panel's other axis, which only a rail lying along
     /// the top ever uses.
     private var railLeading: CGFloat { placement.railLeading }
+
+    private var capacityRecommendation: CapacityRecommendation.Reading? {
+        CapacityRecommendation.reading(
+            codex: store.usage(for: AccountKey(.codex)),
+            claude: store.usage(for: AccountKey(.claudeCode))
+        )
+    }
 
     private var selectedUsage: ProviderUsage? {
         entries.first { $0.id == selectedSlot }?.usage

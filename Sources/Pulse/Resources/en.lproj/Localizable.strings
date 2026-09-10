@@ -432,3 +432,7 @@
 "Use this capacity before the current window resets." = "Use this capacity before the current window resets.";
 "Keep this capacity for work that needs it most." = "Keep this capacity for work that needs it most.";
 "No quota action is needed right now." = "No quota action is needed right now.";
+
+"Prefer Codex right now." = "Prefer Codex right now.";
+"Prefer Claude right now." = "Prefer Claude right now.";
+"Either provider is fine right now." = "Either provider is fine right now.";

@@ -92,6 +92,7 @@ struct UsageDetailCard: View {
     var showsRemaining: Bool = false
     /// Say whether each limit will last its window.
     var showsForecast: Bool = false
+    var capacityRecommendation: CapacityRecommendation.Reading?
     /// Where the pointer's tip should sit along the side facing the rail,
     /// measured from the card's own top or leading edge. The card gets pushed
     /// around by the panel's own edges (see
@@ -106,6 +107,12 @@ struct UsageDetailCard: View {
 
             if let guidance = UsageGuidance.reading(for: usage) {
                 guidanceRow(guidance)
+            }
+
+            if let recommendation = capacityRecommendation {
+                Text(recommendation.choice.message)
+                    .font(.system(size: DetailCardLayout.rowFontSize, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.primary.opacity(0.78))
             }
 
             // However many limits the provider reports — one account-wide
@@ -438,6 +445,7 @@ private struct PulseProgressStyle: ProgressViewStyle {
 #Preview("Detail card") {
     UsageDetailCard(
         usage: .unavailable(.claudeCode, reason: .loading),
+        capacityRecommendation: nil,
         edge: .right,
         pointerCenter: DetailCardLayout.estimatedHeight / 2
     )

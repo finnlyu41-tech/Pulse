@@ -432,3 +432,7 @@
 "Use this capacity before the current window resets." = "当前额度即将重置，建议优先使用。";
 "Keep this capacity for work that needs it most." = "额度偏紧，建议保留给更需要它的任务。";
 "No quota action is needed right now." = "当前无需调整使用策略。";
+
+"Prefer Codex right now." = "现在优先使用 Codex。";
+"Prefer Claude right now." = "现在优先使用 Claude。";
+"Either provider is fine right now." = "现在使用任一提供商都可以。";
