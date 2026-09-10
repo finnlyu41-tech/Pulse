@@ -424,3 +424,11 @@
 "Balance" = "Balance";
 "Warn below" = "Warn below";
 "Notify once when the balance falls under this. Blank for never." = "Notify once when the balance falls under this. Blank for never.";
+
+/* Usage guidance */
+"Use now" = "Use now";
+"Normal" = "Normal";
+"Preserve" = "Preserve";
+"Use this capacity before the current window resets." = "Use this capacity before the current window resets.";
+"Keep this capacity for work that needs it most." = "Keep this capacity for work that needs it most.";
+"No quota action is needed right now." = "No quota action is needed right now.";

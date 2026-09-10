@@ -62,7 +62,7 @@ enum DetailCardLayout {
     /// not like a card that didn't fit. Providers report a variable number of
     /// limits (Codex adds one group per model with its own limits), so this
     /// budgets for more than are on screen today.
-    static var maximumHeight: CGFloat { height(forWindows: 5, footnote: true) }
+    static var maximumHeight: CGFloat { height(forWindows: 5, footnote: true) + guidanceHeight + contentSpacing }
 
     static func height(forWindows count: Int, footnote: Bool = false) -> CGFloat {
         padding * 2
@@ -73,6 +73,7 @@ enum DetailCardLayout {
 
     /// Rendered line height of the "as of …" line under the limits.
     static var footnoteHeight: CGFloat { 13 * PanelMetrics.scale }
+    static var guidanceHeight: CGFloat { 42 * PanelMetrics.scale }
 }
 
 struct UsageDetailCard: View {
@@ -102,6 +103,10 @@ struct UsageDetailCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DetailCardLayout.contentSpacing) {
             header
+
+            if let guidance = UsageGuidance.reading(for: usage) {
+                guidanceRow(guidance)
+            }
 
             // However many limits the provider reports — one account-wide
             // window for some plans, several once per-model limits apply.
@@ -175,6 +180,20 @@ struct UsageDetailCard: View {
         )
         .accessibilityElement(children: .contain)
         .accessibilityLabel(String.localized("\(title ?? usage.provider.displayName) usage details"))
+    }
+
+    private func guidanceRow(_ guidance: UsageGuidance.Reading) -> some View {
+        VStack(alignment: .leading, spacing: 4 * PanelMetrics.scale) {
+            Text(guidance.status.title.uppercased())
+                .font(.system(size: DetailCardLayout.footnoteFontSize, weight: .bold, design: .rounded))
+                .foregroundStyle(guidance.status == .preserve ? Color.pulseWarning : .primary)
+
+            Text(guidance.message)
+                .font(.system(size: DetailCardLayout.rowFontSize, weight: .regular, design: .rounded))
+                .foregroundStyle(.primary.opacity(0.62))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .accessibilityElement(children: .combine)
     }
 
     /// Which side of the card the tail leaves from: the one facing the rail.
