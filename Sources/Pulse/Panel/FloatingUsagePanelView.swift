@@ -71,6 +71,7 @@ struct FloatingUsagePanelView: View {
                 // vanishing while another appears in its place.
                 UsageDockView(
                     entries: entries,
+                    preferredProvider: capacityRecommendation?.preferredProvider,
                     selectedSlot: selectedSlot,
                     edge: placement.edge,
                     isDocked: placement.isDocked,
