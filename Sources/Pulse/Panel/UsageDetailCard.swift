@@ -62,7 +62,11 @@ enum DetailCardLayout {
     /// not like a card that didn't fit. Providers report a variable number of
     /// limits (Codex adds one group per model with its own limits), so this
     /// budgets for more than are on screen today.
-    static var maximumHeight: CGFloat { height(forWindows: 5, footnote: true) + guidanceHeight + contentSpacing }
+    static var maximumHeight: CGFloat {
+        height(forWindows: 5, footnote: true)
+            + guidanceHeight + contentSpacing
+            + recommendationHeight + contentSpacing
+    }
 
     static func height(forWindows count: Int, footnote: Bool = false) -> CGFloat {
         padding * 2
@@ -74,6 +78,7 @@ enum DetailCardLayout {
     /// Rendered line height of the "as of …" line under the limits.
     static var footnoteHeight: CGFloat { 13 * PanelMetrics.scale }
     static var guidanceHeight: CGFloat { 42 * PanelMetrics.scale }
+    static var recommendationHeight: CGFloat { 38 * PanelMetrics.scale }
 }
 
 struct UsageDetailCard: View {
@@ -105,14 +110,12 @@ struct UsageDetailCard: View {
         VStack(alignment: .leading, spacing: DetailCardLayout.contentSpacing) {
             header
 
-            if let guidance = UsageGuidance.reading(for: usage) {
-                guidanceRow(guidance)
+            if let recommendation = capacityRecommendation {
+                recommendationRow(recommendation)
             }
 
-            if let recommendation = capacityRecommendation {
-                Text(recommendation.choice.message)
-                    .font(.system(size: DetailCardLayout.rowFontSize, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.primary.opacity(0.78))
+            if let guidance = UsageGuidance.reading(for: usage) {
+                guidanceRow(guidance)
             }
 
             // However many limits the provider reports — one account-wide
@@ -187,6 +190,23 @@ struct UsageDetailCard: View {
         )
         .accessibilityElement(children: .contain)
         .accessibilityLabel(String.localized("\(title ?? usage.provider.displayName) usage details"))
+    }
+
+    private func recommendationRow(_ recommendation: CapacityRecommendation.Reading) -> some View {
+        HStack(spacing: 8 * PanelMetrics.scale) {
+            Image(systemName: "arrow.up.right.circle.fill")
+                .font(.system(size: 15 * PanelMetrics.scale, weight: .semibold))
+
+            Text(recommendation.choice.message)
+                .font(.system(size: 13 * PanelMetrics.scale, weight: .bold, design: .rounded))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .foregroundStyle(.primary)
+        .padding(.horizontal, 10 * PanelMetrics.scale)
+        .padding(.vertical, 8 * PanelMetrics.scale)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 10 * PanelMetrics.scale))
+        .accessibilityElement(children: .combine)
     }
 
     private func guidanceRow(_ guidance: UsageGuidance.Reading) -> some View {
