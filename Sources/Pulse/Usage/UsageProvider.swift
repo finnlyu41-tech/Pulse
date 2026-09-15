@@ -26,6 +26,14 @@ enum Provider: String, CaseIterable, Identifiable, Codable, Sendable {
 
     var id: String { rawValue }
 
+    /// Providers surfaced by this fork's product UI.
+    ///
+    /// Other adapters remain compiled and maintained so they can be restored
+    /// later without rebuilding their integrations from scratch.
+    static let visibleInProduct: Set<Provider> = [.claudeCode, .codex]
+
+    var isVisibleInProduct: Bool { Self.visibleInProduct.contains(self) }
+
     /// Product names, left untranslated.
     var displayName: String {
         switch self {
