@@ -19,6 +19,14 @@ enum CapacityRecommendation {
 
     struct Reading: Equatable, Sendable {
         let choice: Choice
+
+        var preferredProvider: Provider? {
+            switch choice {
+            case .codex: .codex
+            case .claude: .claudeCode
+            case .either: nil
+            }
+        }
     }
     /// Compare primary accounts only. Extra accounts do not silently change
     /// the app-wide recommendation.

@@ -288,6 +288,7 @@ struct RailEntry: Identifiable, Equatable {
 /// animated, with the rings fading in once it has opened enough to hold them.
 struct UsageDockView: View {
     let entries: [RailEntry]
+    var preferredProvider: Provider? = nil
     let selectedSlot: String?
     let edge: PanelEdge
     /// Fused to a screen edge, or standing free on the desktop. Only the
@@ -392,6 +393,7 @@ struct UsageDockView: View {
                 UsageDockItem(
                     entry: entry,
                     isSelected: selectedSlot == entry.slot.id,
+                    isPreferred: preferredProvider == entry.usage.provider,
                     isInteractive: isExpanded,
                     showsPercentage: DockLayout.showsPercentages(on: edge.axis),
                     onEnter: { onEnter(entry) },
@@ -423,6 +425,7 @@ struct UsageDockView: View {
 private struct UsageDockItem: View {
     let entry: RailEntry
     let isSelected: Bool
+    let isPreferred: Bool
     /// False while the rail is collapsed. The rings are still in the view
     /// tree then, only invisible — and an invisible ring with a live tracking
     /// area would open a card for a provider nobody can see.
@@ -478,12 +481,14 @@ private struct UsageDockItem: View {
             lineWidth: DockLayout.ringLineWidth,
             isBusy: entry.isRunning,
             isRefreshing: entry.isRefreshing,
-            highlight: isSelected,
+            highlight: isSelected || isPreferred,
             elapsedFraction: entry.elapsed,
             secondFraction: entry.second?.usedFraction,
             secondIsSpent: UsageTint.isSpent(entry.second)
         )
-        .scaleEffect(isSelected ? 1.06 : 1)
+        .scaleEffect(isSelected ? 1.06 : (isPreferred ? 1.035 : 1))
+        .opacity(isPreferred || isSelected ? 1 : 0.88)
+        .animation(.easeOut(duration: 0.18), value: isPreferred)
     }
 
     /// An em dash rather than 0% when nothing is known: a zero would read as
